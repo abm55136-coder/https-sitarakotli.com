@@ -1,0 +1,6 @@
+{
+  "name": "Sitara Cloth House - Luxury Fabric & Fashion Kotli",
+  "description": "Premium luxury fabrics, unstitched & stitched collections for Men, Women & Children. Located at Khudadad Market, Main Bazaar, Kotli, Azad Kashmir.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

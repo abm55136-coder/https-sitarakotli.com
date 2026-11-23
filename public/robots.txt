@@ -1,0 +1,9 @@
+# robots.txt for Sitara Cloth House (Kotli, Azad Kashmir)
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /checkout/success
+
+# Sitemaps
+Sitemap: https://sitarakotli.com/sitemap.xml
+

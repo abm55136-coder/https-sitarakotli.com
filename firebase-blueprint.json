@@ -1,0 +1,483 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Catalog fabric or fashion item at Sitara Cloth House",
+      "type": "object",
+      "properties": {
+        "sku": { "type": "string", "minLength": 2, "maxLength": 40, "description": "Stock Keeping Unit" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160, "description": "Product title in English" },
+        "titleUrdu": { "type": "string", "minLength": 0, "maxLength": 160, "description": "Product title in Urdu" },
+        "gender": { "type": "string", "enum": ["men", "women", "kids"] },
+        "category": { "type": "string", "minLength": 2, "maxLength": 40 },
+        "categoryLabel": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "price": { "type": "number", "description": "Selling price in PKR" },
+        "costPrice": { "type": "number", "description": "Wholesale purchase cost in PKR" },
+        "originalPrice": { "type": "number" },
+        "wholesalePrice": { "type": "number", "description": "Wholesale unit rate in PKR" },
+        "wholesaleMinQty": { "type": "number", "description": "Minimum wholesale suit quantity" },
+        "discountPercent": { "type": "number" },
+        "image": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "videoUrl": { "type": "string", "minLength": 0, "maxLength": 2000 },
+        "fabricType": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "fabricTypeUrdu": { "type": "string", "minLength": 0, "maxLength": 120 },
+        "cutMeters": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "season": { "type": "string", "enum": ["Summer", "Winter", "All-Season", "Festive"] },
+        "weaveQuality": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "isUnstitched": { "type": "boolean" },
+        "stockQuantity": { "type": "number" },
+        "isFeatured": { "type": "boolean" },
+        "isNewArrival": { "type": "boolean" },
+        "isSpecialOffer": { "type": "boolean" },
+        "description": { "type": "string", "minLength": 0, "maxLength": 2000 },
+        "descriptionUrdu": { "type": "string", "minLength": 0, "maxLength": 2000 },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "listingType": { "type": "string", "enum": ["fabric", "property", "vehicle", "business"] },
+        "approvalStatus": { "type": "string", "enum": ["approved", "pending", "rejected"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["sku", "title", "gender", "category", "price", "image", "stockQuantity"]
+    },
+    "Banner": {
+      "title": "Banner",
+      "description": "Homepage hero banner slide",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "titleUrdu": { "type": "string", "minLength": 0, "maxLength": 160 },
+        "subtitle": { "type": "string", "minLength": 0, "maxLength": 240 },
+        "subtitleUrdu": { "type": "string", "minLength": 0, "maxLength": 240 },
+        "badgeType": { "type": "string", "enum": ["sale", "new", "discount", "luxury", "festive"] },
+        "imageUrl": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "categoryTarget": { "type": "string", "enum": ["all", "men", "women", "kids", "unstitched"] },
+        "primaryButtonText": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "primaryButtonAction": { "type": "string", "enum": ["shop", "category", "product", "contact", "whatsapp"] },
+        "isActive": { "type": "boolean" },
+        "order": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "imageUrl", "isActive", "order"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Customer public review without PII",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "author": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "authorLocation": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "rating": { "type": "number" },
+        "date": { "type": "string", "maxLength": 30 },
+        "comment": { "type": "string", "minLength": 3, "maxLength": 1000 },
+        "commentUrdu": { "type": "string", "maxLength": 1000 },
+        "verifiedPurchase": { "type": "boolean" },
+        "productTitle": { "type": "string", "maxLength": 160 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "author", "authorLocation", "rating", "date", "comment", "verifiedPurchase", "createdAt"]
+    },
+    "StorefrontConfig": {
+      "title": "StorefrontConfig",
+      "description": "Public store details, theme, logo, and exchange rates",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "nameUrdu": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "whatsapp": { "type": "string", "maxLength": 40 },
+        "address": { "type": "string", "maxLength": 240 },
+        "currentTheme": { "type": "string", "maxLength": 40 },
+        "freeShippingThreshold": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone", "whatsapp", "updatedAt"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized admin record",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 160 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "role": { "type": "string", "enum": ["admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "name", "role", "createdAt"]
+    },
+    "StaffMember": {
+      "title": "StaffMember",
+      "description": "Salesman or manager employee record",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "nameUrdu": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "minLength": 7, "maxLength": 30 },
+        "email": { "type": "string", "maxLength": 160 },
+        "role": { "type": "string", "enum": ["admin", "manager", "salesman"] },
+        "commissionPercent": { "type": "number" },
+        "monthlyTarget": { "type": "number" },
+        "totalSalesAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "on_leave", "inactive"] },
+        "joinedDate": { "type": "string", "maxLength": 30 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone", "role", "status", "joinedDate", "updatedAt"]
+    },
+    "UserAccountProfile": {
+      "title": "UserAccountProfile",
+      "description": "User public-safe account metadata",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "role": { "type": "string", "enum": ["customer", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "role", "createdAt", "updatedAt"]
+    },
+    "UserPrivateInfo": {
+      "title": "UserPrivateInfo",
+      "description": "Isolated customer PII record",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 160 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 300 },
+        "city": { "type": "string", "maxLength": 80 },
+        "country": { "type": "string", "maxLength": 80 },
+        "countryCode": { "type": "string", "maxLength": 10 },
+        "timezone": { "type": "string", "maxLength": 80 },
+        "preferredLanguage": { "type": "string", "maxLength": 10 },
+        "preferredCurrency": { "type": "string", "maxLength": 10 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "updatedAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer storefront order",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string", "minLength": 4, "maxLength": 40 },
+        "date": { "type": "string", "maxLength": 30 },
+        "customerUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "salesmanUid": { "type": "string", "maxLength": 128 },
+        "subtotal": { "type": "number" },
+        "discount": { "type": "number" },
+        "shippingFee": { "type": "number" },
+        "total": { "type": "number" },
+        "orderCurrency": { "type": "string", "maxLength": 10 },
+        "exchangeRate": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cod", "easypaisa", "jazzcash", "bank_transfer", "whatsapp", "card", "paypal", "apple_pay", "swift_wire"] },
+        "paymentStatus": { "type": "string", "enum": ["pending", "authorized", "paid", "cod_due"] },
+        "paymentReference": { "type": "string", "maxLength": 120 },
+        "courier": { "type": "string", "maxLength": 120 },
+        "buyingMode": { "type": "string", "enum": ["retail", "wholesale"] },
+        "status": { "type": "string", "enum": ["pending", "processing", "confirmed", "shipped", "delivered", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["orderNumber", "date", "customerUid", "subtotal", "total", "paymentMethod", "status", "createdAt", "updatedAt"]
+    },
+    "CloudInvoice": {
+      "title": "CloudInvoice",
+      "description": "Cloud POS & showroom billing invoice",
+      "type": "object",
+      "properties": {
+        "invoiceNumber": { "type": "string", "minLength": 4, "maxLength": 40 },
+        "date": { "type": "string", "maxLength": 30 },
+        "customerId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "customerPhone": { "type": "string", "maxLength": 30 },
+        "subtotal": { "type": "number" },
+        "discount": { "type": "number" },
+        "taxAmount": { "type": "number" },
+        "total": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "dueAmount": { "type": "number" },
+        "paymentType": { "type": "string", "enum": ["cash", "easypaisa", "jazzcash", "bank_transfer", "khata_credit"] },
+        "salesmanName": { "type": "string", "maxLength": 100 },
+        "salesmanUid": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["paid", "partial", "khata"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["invoiceNumber", "date", "customerName", "total", "paidAmount", "dueAmount", "paymentType", "status", "createdAt", "updatedAt"]
+    },
+    "KhataAccount": {
+      "title": "KhataAccount",
+      "description": "Customer Khata account tracking credit & previous balances",
+      "type": "object",
+      "properties": {
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "customerNameUrdu": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "minLength": 7, "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 240 },
+        "openingBalance": { "type": "number" },
+        "currentBalance": { "type": "number" },
+        "creditLimit": { "type": "number" },
+        "lastActivityDate": { "type": "string", "maxLength": 30 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["customerName", "phone", "openingBalance", "currentBalance", "lastActivityDate", "createdAt", "updatedAt"]
+    },
+    "KhataTransaction": {
+      "title": "KhataTransaction",
+      "description": "Customer Khata debit or credit ledger transaction",
+      "type": "object",
+      "properties": {
+        "accountId": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "customerName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "type": { "type": "string", "enum": ["debit", "credit"] },
+        "amount": { "type": "number" },
+        "description": { "type": "string", "minLength": 2, "maxLength": 300 },
+        "referenceInvoice": { "type": "string", "maxLength": 60 },
+        "recordedBy": { "type": "string", "maxLength": 100 },
+        "date": { "type": "string", "maxLength": 30 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["accountId", "customerName", "type", "amount", "description", "date", "createdAt"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Fabric wholesaler or textile mill supplier",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "companyName": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "city": { "type": "string", "maxLength": 80 },
+        "phone": { "type": "string", "minLength": 7, "maxLength": 30 },
+        "category": { "type": "string", "maxLength": 80 },
+        "totalPurchased": { "type": "number" },
+        "balancePayable": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "companyName", "phone", "totalPurchased", "balancePayable", "createdAt", "updatedAt"]
+    },
+    "PurchaseRecord": {
+      "title": "PurchaseRecord",
+      "description": "Wholesale stock purchase record from a supplier",
+      "type": "object",
+      "properties": {
+        "supplierId": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "supplierName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "billNumber": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "date": { "type": "string", "maxLength": 30 },
+        "totalAmount": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "balanceDue": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["supplierId", "supplierName", "billNumber", "date", "totalAmount", "paidAmount", "balanceDue", "createdAt"]
+    },
+    "NewsletterSubscriber": {
+      "title": "NewsletterSubscriber",
+      "description": "Newsletter subscription email record",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "minLength": 5, "maxLength": 160 },
+        "promoCode": { "type": "string", "maxLength": 30 },
+        "subscribedAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "promoCode", "subscribedAt", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Immutable security and business operation audit log",
+      "type": "object",
+      "properties": {
+        "actorUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "actorEmail": { "type": "string", "maxLength": 160 },
+        "actorName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "action": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "module": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "details": { "type": "string", "minLength": 2, "maxLength": 400 },
+        "severity": { "type": "string", "enum": ["info", "warning", "security"] },
+        "timestamp": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["actorUid", "actorName", "action", "module", "details", "severity", "timestamp", "createdAt"]
+    },
+    "CloudBackupRecord": {
+      "title": "CloudBackupRecord",
+      "description": "Point-in-time cloud backup snapshot",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "createdByUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "createdByName": { "type": "string", "maxLength": 100 },
+        "version": { "type": "string", "maxLength": 30 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "createdByUid", "version", "createdAt"]
+    },
+    "SecurityConfig": {
+      "title": "SecurityConfig",
+      "description": "Cloud-synchronized WAF, 2FA, rate-limit, and emergency mode settings",
+      "type": "object",
+      "properties": {
+        "firewallEnabled": { "type": "boolean" },
+        "emergencyMode": { "type": "boolean" },
+        "require2faEmailOtp": { "type": "boolean" },
+        "ddosProtectionEnabled": { "type": "boolean" },
+        "rateLimitRpm": { "type": "number" },
+        "authRateLimitPerMin": { "type": "number" },
+        "bruteForceMaxAttempts": { "type": "number" },
+        "bruteForceLockMinutes": { "type": "number" },
+        "maxUploadSizeMb": { "type": "number" },
+        "autoBlockAfterThreats": { "type": "number" },
+        "suspiciousLoginAlerts": { "type": "boolean" },
+        "updatedByUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["firewallEnabled", "emergencyMode", "require2faEmailOtp", "ddosProtectionEnabled", "rateLimitRpm", "updatedByUid", "updatedAt"]
+    },
+    "SecurityLog": {
+      "title": "SecurityLog",
+      "description": "Immutable WAF threat, login alert, and policy audit event",
+      "type": "object",
+      "properties": {
+        "actorUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "ip": { "type": "string", "minLength": 3, "maxLength": 64 },
+        "method": { "type": "string", "minLength": 2, "maxLength": 12 },
+        "path": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "threatType": { "type": "string", "minLength": 2, "maxLength": 60 },
+        "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "action": { "type": "string", "enum": ["blocked", "flagged", "locked", "allowed"] },
+        "details": { "type": "string", "minLength": 2, "maxLength": 400 },
+        "timestamp": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["actorUid", "ip", "method", "path", "threatType", "severity", "action", "details", "timestamp", "createdAt"]
+    },
+    "BlockedIpRecord": {
+      "title": "BlockedIpRecord",
+      "description": "Blocked IP entry synchronized across cloud admin devices",
+      "type": "object",
+      "properties": {
+        "ip": { "type": "string", "minLength": 3, "maxLength": 64 },
+        "reason": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "blockedBy": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "blockedAt": { "type": "string", "maxLength": 40 },
+        "threatCount": { "type": "number" },
+        "autoBlocked": { "type": "boolean" },
+        "createdByUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ip", "reason", "blockedBy", "blockedAt", "threatCount", "autoBlocked", "createdByUid", "updatedAt"]
+    },
+    "SecuritySessionRecord": {
+      "title": "SecuritySessionRecord",
+      "description": "Tracked admin login session state",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "actorUid": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$", "maxLength": 128 },
+        "actorEmail": { "type": "string", "maxLength": 160 },
+        "ip": { "type": "string", "minLength": 3, "maxLength": 64 },
+        "authMethod": { "type": "string", "enum": ["passcode+otp", "passcode", "google+otp", "google"] },
+        "twoFactorVerified": { "type": "boolean" },
+        "revoked": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["sessionId", "actorUid", "ip", "authMethod", "twoFactorVerified", "revoked", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Public storefront catalog items without customer/seller PII"
+    },
+    "/banners/{bannerId}": {
+      "schema": { "$ref": "#/entities/Banner" },
+      "description": "Homepage hero banner slides"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Public customer reviews"
+    },
+    "/config/{configId}": {
+      "schema": { "$ref": "#/entities/StorefrontConfig" },
+      "description": "Public storefront settings, branding, and exchange rates"
+    },
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Admin directory for role verification"
+    },
+    "/staff/{staffId}": {
+      "schema": { "$ref": "#/entities/StaffMember" },
+      "description": "Employees and salesmen management"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserAccountProfile" },
+      "description": "User account non-PII profile"
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateInfo" },
+      "description": "Isolated customer PII (email, phone, address)"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer e-commerce orders"
+    },
+    "/invoices/{invoiceId}": {
+      "schema": { "$ref": "#/entities/CloudInvoice" },
+      "description": "Cloud POS and showroom billing invoices"
+    },
+    "/khataAccounts/{accountId}": {
+      "schema": { "$ref": "#/entities/KhataAccount" },
+      "description": "Customer Khata ledger balances"
+    },
+    "/khataTransactions/{txId}": {
+      "schema": { "$ref": "#/entities/KhataTransaction" },
+      "description": "Individual Khata debit/credit ledger entries"
+    },
+    "/suppliers/{supplierId}": {
+      "schema": { "$ref": "#/entities/Supplier" },
+      "description": "Wholesale mills and fabric suppliers"
+    },
+    "/purchases/{purchaseId}": {
+      "schema": { "$ref": "#/entities/PurchaseRecord" },
+      "description": "Wholesale stock-in purchase records"
+    },
+    "/newsletter/{subId}": {
+      "schema": { "$ref": "#/entities/NewsletterSubscriber" },
+      "description": "Newsletter subscriber email records (write-create public, read admin-only)"
+    },
+    "/activityLogs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Immutable ERP security and audit log entries"
+    },
+    "/backups/{backupId}": {
+      "schema": { "$ref": "#/entities/CloudBackupRecord" },
+      "description": "Point-in-time cloud backup snapshots"
+    },
+    "/securityConfig/{configId}": {
+      "schema": { "$ref": "#/entities/SecurityConfig" },
+      "description": "Admin-only cloud-synchronized firewall and 2FA security configuration"
+    },
+    "/securityLogs/{logId}": {
+      "schema": { "$ref": "#/entities/SecurityLog" },
+      "description": "Immutable admin-only WAF threat and security monitoring logs"
+    },
+    "/securityBlockedIps/{ipId}": {
+      "schema": { "$ref": "#/entities/BlockedIpRecord" },
+      "description": "Admin-only blocked IP address registry"
+    },
+    "/securitySessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/SecuritySessionRecord" },
+      "description": "Admin-only tracked login session status"
+    }
+  }
+}
