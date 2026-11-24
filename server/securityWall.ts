@@ -79,11 +79,13 @@ function safeEqualText(a: string, b: string): boolean {
 }
 
 function loadFirebaseWebApiKey(): string | null {
+  const envKey = (process.env.FIREBASE_WEB_API_KEY || process.env.VITE_FIREBASE_API_KEY || '').trim();
+  if (envKey) return envKey;
   try {
     const cfgPath = path.resolve(process.cwd(), 'firebase-applet-config.json');
     if (!fs.existsSync(cfgPath)) return null;
     const parsed = JSON.parse(fs.readFileSync(cfgPath, 'utf8')) as { apiKey?: string };
-    return parsed.apiKey || null;
+    return parsed.apiKey?.trim() || null;
   } catch {
     return null;
   }

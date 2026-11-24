@@ -84,6 +84,7 @@ import {
   BOOTSTRAPPED_ADMIN_EMAIL,
   db,
   googleProvider,
+  isFirebaseConfigured,
   testFirestoreConnection,
 } from '../firebase';
 import {
@@ -478,7 +479,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const cloudSync: CloudSyncState = {
     isOnline,
-    firebaseReady: true,
+    firebaseReady: isFirebaseConfigured,
     serverReachable,
     isSyncing,
     hasPendingWrites,
@@ -1807,6 +1808,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithGoogle = async (): Promise<FirebaseUser | null> => {
+    if (!auth || !isFirebaseConfigured) {
+      setLastError('Firebase Web API key is not configured in environment variables (VITE_FIREBASE_API_KEY).');
+      return null;
+    }
     try {
       setLastError(null);
       const result = await signInWithPopup(auth, googleProvider);
@@ -1835,7 +1840,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOutCloud = async (): Promise<void> => {
-    await signOut(auth);
+    if (auth) {
+      await signOut(auth);
+    }
     setFirebaseUser(null);
     logoutUser();
   };
@@ -1877,6 +1884,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // --- FIREBASE AUTH & REAL-TIME FIRESTORE SUBSCRIPTIONS ---
 
   useEffect(() => {
+    if (!isFirebaseConfigured || !auth || !db) {
+      setServerReachable(false);
+      return;
+    }
     let active = true;
     testFirestoreConnection().then((ok) => {
       if (active) setServerReachable(ok);
@@ -2008,7 +2019,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         })
       );
-    } else if (firebaseUser?.uid) {
+    } else if (firebaseUser?.uid && db) {
       // Customer-scoped query matching firestore.rules `allow list: if resource.data.customerUid == request.auth.uid`
       const qOrders = query(collection(db, 'orders'), where('customerUid', '==', firebaseUser.uid));
       unsubs.push(

@@ -131,6 +131,7 @@ export function subscribePublicCollection<T>(
   onData: (items: T[], meta: { fromCache: boolean; hasPendingWrites: boolean }) => void,
   onError?: (err: unknown) => void
 ): Unsubscribe {
+  if (!db) return () => {};
   const ref = collection(db, collectionName);
   return onSnapshot(
     ref,
@@ -156,6 +157,7 @@ export function subscribeStorefrontConfig(
     currentTheme?: ThemeId;
   }) => void
 ): Unsubscribe {
+  if (!db) return () => {};
   const ref = doc(db, 'config', 'storefront');
   return onSnapshot(
     ref,
@@ -173,6 +175,7 @@ export function subscribeStorefrontConfig(
 // --- Admin / ERP Write Helpers ---
 
 export async function syncProductToCloud(product: Product): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(product.id, 'prod');
   const path = `products/${id}`;
   try {
@@ -183,6 +186,7 @@ export async function syncProductToCloud(product: Product): Promise<void> {
 }
 
 export async function deleteProductFromCloud(productId: string): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(productId, 'prod');
   const path = `products/${id}`;
   try {
@@ -193,6 +197,7 @@ export async function deleteProductFromCloud(productId: string): Promise<void> {
 }
 
 export async function syncBannerToCloud(banner: BannerItem): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(banner.id, 'banner');
   const path = `banners/${id}`;
   try {
@@ -203,6 +208,7 @@ export async function syncBannerToCloud(banner: BannerItem): Promise<void> {
 }
 
 export async function deleteBannerFromCloud(bannerId: string): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(bannerId, 'banner');
   const path = `banners/${id}`;
   try {
@@ -220,6 +226,7 @@ export async function syncStorefrontConfigToCloud(
     currentTheme?: ThemeId;
   }
 ): Promise<void> {
+  if (!db) return;
   const path = 'config/storefront';
   try {
     await setDoc(doc(db, 'config', 'storefront'), {
@@ -257,6 +264,7 @@ export async function syncStorefrontConfigToCloud(
 }
 
 export async function syncOrderToCloud(order: Order, customerUid: string, isNew: boolean): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(order.id, 'ord');
   const path = `orders/${id}`;
   try {
@@ -311,6 +319,7 @@ export async function syncOrderToCloud(order: Order, customerUid: string, isNew:
 }
 
 export async function syncReviewToCloud(review: Review, userId: string): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(review.id, 'rev');
   const path = `reviews/${id}`;
   try {
@@ -333,6 +342,7 @@ export async function syncReviewToCloud(review: Review, userId: string): Promise
 }
 
 export async function syncNewsletterToCloud(sub: NewsletterSubscriber): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(sub.id, 'sub');
   const path = `newsletter/${id}`;
   try {
@@ -349,6 +359,7 @@ export async function syncNewsletterToCloud(sub: NewsletterSubscriber): Promise<
 }
 
 export async function syncInvoiceToCloud(invoice: CloudInvoice): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(invoice.id, 'inv');
   const path = `invoices/${id}`;
   try {
@@ -368,7 +379,7 @@ export async function syncInvoiceToCloud(invoice: CloudInvoice): Promise<void> {
       dueAmount: Number(invoice.dueAmount) || 0,
       paymentType: invoice.paymentType,
       salesmanName: truncateStr(invoice.salesmanName || 'Awais Malik', 100),
-      salesmanUid: truncateStr(invoice.salesmanUid || auth.currentUser?.uid || 'admin', 128),
+      salesmanUid: truncateStr(invoice.salesmanUid || auth?.currentUser?.uid || 'admin', 128),
       notes: truncateStr(invoice.notes || '', 400),
       status: invoice.status,
       createdAt: serverTimestamp(),
@@ -380,6 +391,7 @@ export async function syncInvoiceToCloud(invoice: CloudInvoice): Promise<void> {
 }
 
 export async function syncKhataAccountToCloud(account: KhataAccount): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(account.id, 'khata');
   const path = `khataAccounts/${id}`;
   try {
@@ -406,6 +418,7 @@ export async function syncKhataTransactionAtomicToCloud(
   account: KhataAccount,
   tx: KhataTransaction
 ): Promise<void> {
+  if (!db) return;
   const accId = sanitizeDocId(account.id, 'khata');
   const txId = sanitizeDocId(tx.id, 'ktx');
   const path = `khataTransactions/${txId}`;
@@ -444,6 +457,7 @@ export async function syncKhataTransactionAtomicToCloud(
 }
 
 export async function syncSupplierToCloud(supplier: Supplier): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(supplier.id, 'sup');
   const path = `suppliers/${id}`;
   try {
@@ -469,6 +483,7 @@ export async function syncPurchaseAtomicToCloud(
   supplier: Supplier,
   purchase: PurchaseRecord
 ): Promise<void> {
+  if (!db) return;
   const supId = sanitizeDocId(supplier.id, 'sup');
   const purId = sanitizeDocId(purchase.id, 'pur');
   const path = `purchases/${purId}`;
@@ -507,6 +522,7 @@ export async function syncPurchaseAtomicToCloud(
 }
 
 export async function syncStaffMemberToCloud(staff: StaffMember): Promise<void> {
+  if (!db) return;
   const id = sanitizeDocId(staff.id, 'stf');
   const path = `staff/${id}`;
   try {
@@ -533,6 +549,7 @@ export async function syncStaffMemberToCloud(staff: StaffMember): Promise<void> 
 }
 
 export async function syncActivityLogToCloud(log: ActivityLog): Promise<void> {
+  if (!db || !auth) return;
   const uid = auth.currentUser?.uid;
   if (!uid) return;
   const id = sanitizeDocId(log.id, 'log');
@@ -556,6 +573,7 @@ export async function syncActivityLogToCloud(log: ActivityLog): Promise<void> {
 }
 
 export async function syncCloudBackupSnapshot(backup: CloudBackupRecord): Promise<void> {
+  if (!db || !auth) return;
   const uid = auth.currentUser?.uid;
   if (!uid) return;
   const id = sanitizeDocId(backup.id, 'bkp');
@@ -586,6 +604,7 @@ export async function pushFullCatalogSeedToCloud(
     currentTheme?: ThemeId;
   }
 ): Promise<void> {
+  if (!db) return;
   const batch = writeBatch(db);
   for (const product of products.slice(0, 150)) {
     const id = sanitizeDocId(product.id, 'prod');
@@ -614,6 +633,7 @@ export async function syncSecurityConfigToCloud(config: {
   autoBlockAfterThreats: number;
   suspiciousLoginAlerts: boolean;
 }): Promise<void> {
+  if (!db || !auth) return;
   const uid = auth.currentUser?.uid;
   if (!uid) return;
   const path = 'securityConfig/wall';
@@ -651,6 +671,7 @@ export async function syncSecurityLogToCloud(evt: {
   userAgent?: string;
   timestamp: string;
 }): Promise<void> {
+  if (!db || !auth) return;
   const uid = auth.currentUser?.uid;
   if (!uid) return;
   const id = sanitizeDocId(evt.id, 'sec');
@@ -683,6 +704,7 @@ export async function syncBlockedIpToCloud(entry: {
   threatCount: number;
   autoBlocked: boolean;
 }): Promise<void> {
+  if (!db || !auth) return;
   const uid = auth.currentUser?.uid;
   if (!uid) return;
   const id = sanitizeDocId(`ip-${entry.ip}`, 'ip');
@@ -705,6 +727,7 @@ export async function syncBlockedIpToCloud(entry: {
 }
 
 export async function deleteBlockedIpFromCloud(ip: string): Promise<void> {
+  if (!db || !auth) return;
   const uid = auth.currentUser?.uid;
   if (!uid) return;
   const id = sanitizeDocId(`ip-${ip}`, 'ip');
@@ -724,6 +747,7 @@ export async function syncSecuritySessionToCloud(session: {
   twoFactorVerified: boolean;
   revoked: boolean;
 }): Promise<void> {
+  if (!db || !auth) return;
   const uid = auth.currentUser?.uid;
   if (!uid) return;
   const id = sanitizeDocId(session.sessionId, 'sess');
